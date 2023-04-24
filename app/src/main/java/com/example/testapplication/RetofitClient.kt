@@ -14,4 +14,6 @@ object RetofitClient {
             .build()
     }
 
+    fun dogsApi() = getInstance().create(ApiService::class.java)
+
 }

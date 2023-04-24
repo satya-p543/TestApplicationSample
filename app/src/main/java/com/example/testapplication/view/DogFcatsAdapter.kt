@@ -15,8 +15,6 @@ class DogFcatsAdapter : RecyclerView.Adapter<DogFcatsAdapter.DogFcatsAdapterView
         notifyDataSetChanged()
     }
 
-
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DogFcatsAdapterViewholder {
         return DogFcatsAdapterViewholder(
             DogFactItemLayoutBinding.inflate(
@@ -33,7 +31,8 @@ class DogFcatsAdapter : RecyclerView.Adapter<DogFcatsAdapter.DogFcatsAdapterView
     }
 
     override fun onBindViewHolder(holder: DogFcatsAdapterViewholder, position: Int) {
-         // holder.binding.
+        val dogFacts= dogList[position]
+          holder.binding.dogfactTextview.text = dogFacts.get(position).fact
         Log.i("satya","msg "+holder.binding.root)
     }
 

@@ -1,0 +1,1 @@
+class DogFacts : ArrayList<DogFactsItem>()

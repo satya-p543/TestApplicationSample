@@ -1,7 +1,5 @@
 package com.example.testapplication.view
 
-import DogFacts
-
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -9,9 +7,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.testapplication.databinding.DogFactItemLayoutBinding
 
 class DogFcatsAdapter : RecyclerView.Adapter<DogFcatsAdapter.DogFcatsAdapterViewholder>() {
-    private var dogList = ArrayList<DogFacts>()
-    fun setDogList(dogList : List<DogFacts>){
-        this.dogList = dogList as ArrayList<DogFacts>
+    private var dogList = ArrayList<String>()
+    fun setDogList(dogList: List<String>) {
+        this.dogList = dogList as ArrayList<String>
         notifyDataSetChanged()
     }
 
@@ -31,9 +29,9 @@ class DogFcatsAdapter : RecyclerView.Adapter<DogFcatsAdapter.DogFcatsAdapterView
     }
 
     override fun onBindViewHolder(holder: DogFcatsAdapterViewholder, position: Int) {
-        val dogFacts= dogList[position]
-          holder.binding.dogfactTextview.text = dogFacts.get(position).fact
-        Log.i("satya","msg "+holder.binding.root)
+        val dogFacts = dogList[position]
+        holder.binding.dogfactTextview.text = dogFacts
+        Log.i("satya", "msg " + holder.binding.root)
     }
 
     class DogFcatsAdapterViewholder(val binding: DogFactItemLayoutBinding) :

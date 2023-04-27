@@ -1,6 +1,5 @@
 package com.example.testapplication
 
-import DogFactsItem
 import com.example.testapplication.viewmodel.DogFactsViewmodel
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -10,29 +9,37 @@ import org.junit.runners.JUnit4
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 
+
 @RunWith(JUnit4::class)
 class DogFactsViewmodelTest {
     lateinit var viewmodel: DogFactsViewmodel
 
+    @Mock
+    lateinit var repository: DogsRepository
+
+    @Mock
+    lateinit var apiService: ApiService
+
     @Before
-    fun setup() {
+     fun setup() {
         MockitoAnnotations.initMocks(this)
-        viewmodel = DogFactsViewmodel()
-        viewmodel.getDogFactList()
+        repository = DogsRepository(apiService)
+        viewmodel = DogFactsViewmodel(repository)
+        viewmodel.getDogFactList(5)
     }
 
     @Test
     fun getDogFactSuccessCaseTest() {
-        val dooFacts = DogFactsItem("Dogs are animalas")
-        val value = viewmodel.observeDogsLivedata().value
-        assertEquals(dooFacts.fact, value)
+        val dogFacts = "Dogs are animalas"
+        val value = viewmodel.observeDogsLivedata().value?.get(1)
+        assertEquals(dogFacts, value)
     }
 
 
     @Test
     fun getDogFactFailCaseTest() {
-        val dooFacts = DogFactsItem("")
+        val dogFacts:List<String> = emptyList()
         val value = viewmodel.observeDogsLivedata().value
-        assertEquals(dooFacts.fact, value)
+        assertEquals(dogFacts, value)
     }
 }

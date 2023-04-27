@@ -1,40 +1,33 @@
 package com.example.testapplication.viewmodel
 
-import DogFacts
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.testapplication.ApiService
-import com.example.testapplication.RetofitClient
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import androidx.lifecycle.viewModelScope
+import com.example.testapplication.DogsRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
-class DogFactsViewmodel : ViewModel() {
-    private val dogListLiveData = MutableLiveData<List<DogFacts>>()
+class DogFactsViewmodel(private val repository: DogsRepository) : ViewModel() {
+    private val dogListLiveData = MutableLiveData<List<String>>()
     private val errorMessage = MutableLiveData<String>()
 
 
-    fun getDogFactList() {
-        RetofitClient.dogsApi().getDogFactsApi().enqueue(object : Callback<List<DogFacts>> {
-            override fun onResponse(
-                call: Call<List<DogFacts>>,
-                response: Response<List<DogFacts>>
-            ) {
-                dogListLiveData.postValue( response.body())
-                Log.i("satya","success"+response.body()+" "+dogListLiveData.value)
+    fun getDogFactList(number: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val response = repository.getDogFacts(number)
+            if (response.isSuccessful && response.body()?.success!!) {
+                dogListLiveData.postValue(response.body()?.facts)
+                Log.i("satya", "success" + response.body() + " " + dogListLiveData.value)
+            } else {
+                errorMessage.postValue(response.message())
+                Log.i("satya", "fail " + response.message())
             }
-
-            override fun onFailure(call: Call<List<DogFacts>>, t: Throwable) {
-                errorMessage.postValue(t.message)
-                Log.i("satya","fail "+t.message)
-            }
-
-        })
+        }
     }
 
-    fun observeDogsLivedata(): LiveData<List<DogFacts>> {
+    fun observeDogsLivedata(): LiveData<List<String>> {
         return dogListLiveData
     }
 }
